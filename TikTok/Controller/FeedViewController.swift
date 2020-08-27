@@ -97,10 +97,14 @@ class FeedViewController: UIViewController,  StoryboardScene {
     
     
     func play() {
+     
+      
         player?.play()
     }
     
     func pause() {
+  
+       // player?.seek(to: CMTime.zero)
         player?.pause()
     }
     
@@ -115,6 +119,10 @@ class FeedViewController: UIViewController,  StoryboardScene {
         let playerView = AVPlayerLayer()
         playerView.frame = view.bounds
         playerView.player =  player
+        
+        NotificationCenter.default.addObserver(self, selector:#selector(self.playerDidFinishPlaying(note:)),name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+
+       
         playerView.videoGravity = .resizeAspectFill
         videoContainer.layer.addSublayer(playerView)
         isPlaying ? play() : nil
@@ -152,7 +160,13 @@ class FeedViewController: UIViewController,  StoryboardScene {
         view.sendSubviewToBack(videoContainer)
     }
     
-    
+    @objc func playerDidFinishPlaying(note: NSNotification){
+               //Called when player finished playing
+        player?.seek(to: CMTime.zero)
+        //player?.pause()
+        player?.play()
+           }
+         
 }
 
 
